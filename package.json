@@ -1,0 +1,9 @@
+{
+  "name": "obscury-fraternity-site",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "python3 -m http.server 3000",
+    "build": "mkdir -p dist && cp index.html dist/index.html && cp vercel.json dist/vercel.json"
+  }
+}
