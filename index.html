@@ -99,8 +99,26 @@
     min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center;
     text-align:center; padding:120px 24px 80px; position:relative;
   }
+  .logo-halo{
+    position:relative; display:inline-flex; align-items:center; justify-content:center;
+    margin-bottom:36px;
+  }
+  .logo-halo::before{
+    content:''; position:absolute; inset:-18%; border-radius:50%;
+    background:radial-gradient(circle, rgba(178,138,255,.42) 0%, rgba(120,70,200,.22) 38%, rgba(80,40,150,.08) 62%, transparent 75%);
+    filter:blur(22px);
+    animation:halo-pulse 5s ease-in-out infinite;
+    z-index:0;
+  }
+  .logo-halo::after{
+    content:''; position:absolute; inset:-2%; border-radius:50%;
+    border:1px solid rgba(178,138,255,.16);
+    z-index:0;
+  }
+  @keyframes halo-pulse{ 0%,100%{ opacity:.65; transform:scale(.94); } 50%{ opacity:1; transform:scale(1.04); } }
+  .logo-halo .hero-glyph{ position:relative; z-index:1; margin-bottom:0; }
   .hero-glyph{
-    width:190px; height:190px; margin-bottom:36px; opacity:.96; object-fit:contain;
+    width:190px; height:190px; opacity:.96; object-fit:contain;
     animation:pulse-glow 5s ease-in-out infinite;
     filter:drop-shadow(0 0 22px rgba(178,138,255,.35));
   }
@@ -217,6 +235,34 @@
     padding:14px 28px; cursor:pointer; transition:all .35s; position:relative; overflow:hidden;
   }
   .btn-mystic:hover{ background:rgba(178,138,255,.08); box-shadow:var(--glow); }
+  .btn-mystic:disabled{ opacity:.5; cursor:not-allowed; }
+
+  /* ---------- recrutamento form ---------- */
+  .recruit-form{ max-width:640px; margin:0 auto; display:flex; flex-direction:column; gap:26px; }
+  .recruit-form .field{ display:flex; flex-direction:column; gap:10px; }
+  .recruit-form label{
+    font-family:'Cinzel',serif; font-size:12px; letter-spacing:.15em; text-transform:uppercase;
+    color:var(--accent); text-align:left;
+  }
+  .recruit-form input[type="text"],
+  .recruit-form input[type="tel"],
+  .recruit-form textarea{
+    background:var(--surface); border:1px solid var(--border-soft); color:var(--text);
+    font-family:'EB Garamond', serif; font-size:16px; padding:13px 16px; border-radius:2px;
+    resize:vertical; transition:border-color .3s, box-shadow .3s;
+  }
+  .recruit-form input::placeholder, .recruit-form textarea::placeholder{ color:var(--text-faint); }
+  .recruit-form input:focus, .recruit-form textarea:focus{
+    outline:none; border-color:var(--accent-dim); box-shadow:0 0 0 1px var(--accent-dim), var(--glow);
+  }
+  .recruit-form .field input[type="text"] + textarea{ margin-top:4px; }
+  .recruit-form .btn-mystic{ align-self:center; margin-top:8px; min-width:240px; }
+  .recruit-status{
+    text-align:center; font-family:'Cinzel',serif; font-size:12px; letter-spacing:.15em;
+    text-transform:uppercase; color:var(--text-dim); min-height:18px;
+  }
+  .recruit-status.ok{ color:var(--accent-bright); }
+  .recruit-status.err{ color:#e08a8a; }
 
   .nykir-grid{
     display:grid; grid-template-columns:repeat(6,1fr); gap:14px; max-width:1180px; margin:0 auto;
@@ -356,6 +402,7 @@
     <a href="#pentarquia">Pentarquia</a>
     <a href="#hierarquia">Hierarquia</a>
     <a href="#nykir">Nykir</a>
+    <a href="#recrutamento">Recrutamento</a>
   </nav>
 </header>
 
@@ -363,7 +410,7 @@
 
   <!-- HERO -->
   <section class="hero">
-    <img class="hero-glyph logo-img" alt="Selo da Obscury Fraternity" src="">
+    <div class="logo-halo"><img class="hero-glyph logo-img" alt="Selo da Obscury Fraternity" src=""></div>
     <div class="brand-title">Obscury</div>
     <div class="brand-sub">Fraternity</div>
     <p class="hero-quote">"Nem toda escuridão existe para ser temida. Algumas existem para revelar quem realmente somos."</p>
@@ -548,10 +595,47 @@
     </div>
   </section>
 
+  <!-- RECRUTAMENTO -->
+  <section class="section" id="recrutamento">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="eyebrow">IX · Recrutamento</span>
+        <h2>Toque à porta do Véu</h2>
+        <p style="text-transform:none; letter-spacing:normal; font-family:'EB Garamond',serif; font-size:18px; margin-top:18px;">Nem todos são chamados. Se você acredita que já sente o peso de um olhar sobre si, preencha o que se pede abaixo.</p>
+      </div>
+
+      <form id="recruit-form" class="recruit-form reveal" novalidate>
+        <div class="field">
+          <label for="r-nome">Nome</label>
+          <input type="text" id="r-nome" name="nome" autocomplete="name" required>
+        </div>
+
+        <div class="field">
+          <label for="r-telefone">Telefone</label>
+          <input type="tel" id="r-telefone" name="telefone" autocomplete="tel" required>
+        </div>
+
+        <div class="field">
+          <label for="r-motivo">Por que deseja fazer parte da fraternidade?</label>
+          <textarea id="r-motivo" name="motivo" rows="4" required></textarea>
+        </div>
+
+        <div class="field">
+          <label for="r-palavra">Se defina em uma única palavra — e explique por quê</label>
+          <input type="text" id="r-palavra" name="palavra" placeholder="Uma única palavra" required>
+          <textarea id="r-justificativa" name="justificativa" rows="3" placeholder="Explique o porquê dessa palavra" required></textarea>
+        </div>
+
+        <button type="submit" class="btn-mystic" id="recruit-submit">Enviar à Pentarquia</button>
+        <p class="recruit-status" id="recruit-status" aria-live="polite"></p>
+      </form>
+    </div>
+  </section>
+
   <!-- SELAMENTO -->
   <section class="selamento" id="selamento">
     <div class="wrap">
-      <img class="hero-glyph reveal logo-img" alt="Selo da Obscury Fraternity" src="">
+      <div class="logo-halo reveal"><img class="hero-glyph logo-img" alt="Selo da Obscury Fraternity" src=""></div>
       <span class="eyebrow reveal">Selamento</span>
       <h2 class="reveal" style="margin:14px 0 26px;">O fim da primeira leitura</h2>
       <div class="prose reveal" style="margin:0 auto;">
@@ -584,7 +668,7 @@
 </div>
 
 <!-- AMBIENT AUDIO CONTROL -->
-<div class="audio-control" id="audio-control">
+<div class="audio-control playing" id="audio-control">
   <button class="audio-toggle" id="audio-toggle" aria-label="Ativar música ambiente" title="Música ambiente do Véu">
     <span class="ring"></span>
     <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -770,27 +854,36 @@ const io = new IntersectionObserver((entries)=>{
 }, { threshold:0.12 });
 document.querySelectorAll('.reveal').forEach(el=> io.observe(el));
 
-/* ================= AMBIENT AUDIO ENGINE (Web Audio API, synthesized — no external files) ================= */
+/* ================= DARK AMBIENT ENGINE =================
+   Composição original sintetizada inteiramente via Web Audio API.
+   Não usa nenhum arquivo de áudio externo — por isso é 100% livre de
+   direitos autorais: cada nota é gerada por código, em tempo real,
+   no navegador do próprio usuário.
+   Estilo: ambiente sombrio e atmosférico, sem sobressaltos — pensado
+   para leitura/criação, no espírito de trilhas de D&D/RPG. */
 const VeuAudio = (() => {
   let ctx = null;
   let masterGain, filterNode, reverb, noiseGain;
+  let dryGain, wetGain;
   let voices = [];
   let noiseSource = null;
   let lfo = null;
+  let bellTimer = null;
   let isPlaying = false;
   let userVolume = 0.35;
 
-  // Slow-shifting minor/occult chord progression (Hz) — a distant ritual drone
+  // Progressão sombria mas consonante (i - VI - VII - i, em Lá menor),
+  // com uma nota estendida (9ª/11ª) em cada acorde para dar ar "místico".
   const chordCycle = [
-    [65.41, 98.00, 155.56, 233.08],   // C2  G2  Eb3 Bb3
-    [61.74, 92.50, 146.83, 220.00],   // B1  F#2 D3  A3
-    [58.27, 87.31, 138.59, 207.65],   // A#1 F2  C#3 G#3
-    [65.41, 98.00, 164.81, 246.94],   // C2  G2  E3  B3
+    [55.00, 65.41, 82.41, 110.00],   // A1  C2   E2   A2      (Am)
+    [43.65, 55.00, 65.41, 87.31],    // F1  A1   C2   F2      (F)
+    [49.00, 61.74, 73.42, 98.00],    // G1  B1   D2   G2      (G)
+    [55.00, 65.41, 82.41, 123.47],   // A1  C2   E2   B2      (Am add9)
   ];
   let chordIndex = 0;
   let chordTimer = null;
 
-  function buildImpulseResponse(seconds = 4.5, decay = 3.2){
+  function buildImpulseResponse(seconds = 5, decay = 2.6){
     const rate = ctx.sampleRate;
     const length = rate * seconds;
     const impulse = ctx.createBuffer(2, length, rate);
@@ -807,12 +900,22 @@ const VeuAudio = (() => {
     const osc = ctx.createOscillator();
     osc.type = type;
     osc.frequency.value = freq;
+
+    // segunda camada levemente destafinada, para um pad mais quente/encorpado
+    const osc2 = ctx.createOscillator();
+    osc2.type = type === 'sine' ? 'triangle' : 'sine';
+    osc2.frequency.value = freq * 1.003;
+
     const g = ctx.createGain();
     g.gain.value = 0;
-    osc.connect(g).connect(filterNode);
+
+    osc.connect(g);
+    osc2.connect(g);
+    g.connect(filterNode);
     osc.start();
-    g.gain.linearRampToValueAtTime(gainVal, ctx.currentTime + 3);
-    return { osc, gain: g, baseFreq: freq };
+    osc2.start();
+    g.gain.linearRampToValueAtTime(gainVal, ctx.currentTime + 5);
+    return { osc, osc2, gain: g, baseFreq: freq };
   }
 
   function crossfadeChord(newChord){
@@ -820,10 +923,38 @@ const VeuAudio = (() => {
     oldVoices.forEach(v => {
       v.gain.gain.cancelScheduledValues(ctx.currentTime);
       v.gain.gain.setValueAtTime(v.gain.gain.value, ctx.currentTime);
-      v.gain.gain.linearRampToValueAtTime(0, ctx.currentTime + 6);
-      setTimeout(() => { try{ v.osc.stop(); v.osc.disconnect(); v.gain.disconnect(); }catch(e){} }, 6500);
+      v.gain.gain.linearRampToValueAtTime(0, ctx.currentTime + 8);
+      setTimeout(() => {
+        try{ v.osc.stop(); v.osc.disconnect(); v.osc2.stop(); v.osc2.disconnect(); v.gain.disconnect(); }catch(e){}
+      }, 8500);
     });
-    voices = newChord.map((f, i) => makeVoice(f, i === 0 ? 0.16 : 0.09, i % 2 === 0 ? 'sine' : 'triangle'));
+    voices = newChord.map((f, i) => makeVoice(f, i === 0 ? 0.14 : 0.08, i % 2 === 0 ? 'sine' : 'triangle'));
+  }
+
+  // Sino distante e suave — textura de ambientação, sem sobressalto (ataque lento, sem estridência)
+  function playBell(){
+    if(!ctx || !isPlaying) return;
+    const t = ctx.currentTime;
+    const root = [523.25, 587.33, 659.25, 698.46][Math.floor(Math.random()*4)]; // C5 D5 E5 F5
+    [root, root * 2].forEach((f, i) => {
+      const o = ctx.createOscillator();
+      o.type = 'sine';
+      o.frequency.value = f;
+      const g = ctx.createGain();
+      g.gain.setValueAtTime(0.0001, t);
+      g.gain.linearRampToValueAtTime(i === 0 ? 0.05 : 0.02, t + 0.6);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + 6.5);
+      o.connect(g);
+      g.connect(reverb);
+      g.connect(dryGain);
+      o.start(t);
+      o.stop(t + 7);
+    });
+  }
+
+  function scheduleBell(){
+    const next = 32000 + Math.random() * 34000; // entre ~32s e ~66s
+    bellTimer = setTimeout(() => { playBell(); scheduleBell(); }, next);
   }
 
   function init(){
@@ -835,27 +966,28 @@ const VeuAudio = (() => {
 
     filterNode = ctx.createBiquadFilter();
     filterNode.type = 'lowpass';
-    filterNode.frequency.value = 800;
-    filterNode.Q.value = 0.6;
+    filterNode.frequency.value = 650;
+    filterNode.Q.value = 0.5;
 
     reverb = ctx.createConvolver();
     reverb.buffer = buildImpulseResponse();
 
-    const dryGain = ctx.createGain(); dryGain.gain.value = 0.55;
-    const wetGain = ctx.createGain(); wetGain.gain.value = 0.75;
+    dryGain = ctx.createGain(); dryGain.gain.value = 0.5;
+    wetGain = ctx.createGain(); wetGain.gain.value = 0.85;
 
     filterNode.connect(dryGain).connect(masterGain);
     filterNode.connect(reverb).connect(wetGain).connect(masterGain);
+    reverb.connect(masterGain); // cauda extra p/ o sino
 
-    // slow LFO breathing on the filter cutoff, like the Véu itself exhaling
+    // respiração bem lenta no filtro — como uma névoa se movendo
     lfo = ctx.createOscillator();
-    lfo.frequency.value = 0.045;
+    lfo.frequency.value = 0.035;
     const lfoGain = ctx.createGain();
-    lfoGain.gain.value = 260;
+    lfoGain.gain.value = 150;
     lfo.connect(lfoGain).connect(filterNode.frequency);
     lfo.start();
 
-    // faint filtered noise bed for atmosphere
+    // leito de ruído filtrado — vento distante / textura de caverna
     const bufferSize = 2 * ctx.sampleRate;
     const noiseBuffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
     const output = noiseBuffer.getChannelData(0);
@@ -864,20 +996,22 @@ const VeuAudio = (() => {
     noiseSource.buffer = noiseBuffer;
     noiseSource.loop = true;
     const noiseFilter = ctx.createBiquadFilter();
-    noiseFilter.type = 'bandpass';
-    noiseFilter.frequency.value = 500;
-    noiseFilter.Q.value = 0.5;
+    noiseFilter.type = 'lowpass';
+    noiseFilter.frequency.value = 340;
+    noiseFilter.Q.value = 0.4;
     noiseGain = ctx.createGain();
-    noiseGain.gain.value = 0.02;
+    noiseGain.gain.value = 0.03;
     noiseSource.connect(noiseFilter).connect(noiseGain).connect(masterGain);
     noiseSource.start();
 
-    voices = chordCycle[0].map((f, i) => makeVoice(f, i === 0 ? 0.16 : 0.09, i % 2 === 0 ? 'sine' : 'triangle'));
+    voices = chordCycle[0].map((f, i) => makeVoice(f, i === 0 ? 0.14 : 0.08, i % 2 === 0 ? 'sine' : 'triangle'));
 
     chordTimer = setInterval(() => {
       chordIndex = (chordIndex + 1) % chordCycle.length;
       crossfadeChord(chordCycle[chordIndex]);
-    }, 22000);
+    }, 28000);
+
+    scheduleBell();
   }
 
   function play(){
@@ -910,7 +1044,7 @@ const VeuAudio = (() => {
     return isPlaying;
   }
 
-  return { toggle, setVolume, get playing(){ return isPlaying; } };
+  return { play, pause, toggle, setVolume, get playing(){ return isPlaying; }, get contextState(){ return ctx ? ctx.state : 'not-started'; } };
 })();
 
 const audioControl = document.getElementById('audio-control');
@@ -921,10 +1055,38 @@ const audioLabel = document.getElementById('audio-label');
 audioVolumeSlider.value = 35;
 VeuAudio.setVolume(0.35);
 
-audioToggleBtn.addEventListener('click', () => {
-  const playing = VeuAudio.toggle();
+function syncAudioUI(playing){
   audioControl.classList.toggle('playing', playing);
   audioToggleBtn.setAttribute('aria-label', playing ? 'Silenciar música ambiente' : 'Ativar música ambiente');
+}
+
+function startAudioAutomatically(){
+  try{
+    VeuAudio.play();
+    syncAudioUI(true);
+  }catch(e){
+    syncAudioUI(false);
+  }
+}
+
+// Tenta iniciar a música automaticamente ao abrir a página.
+// Alguns navegadores bloqueiam áudio com som até o primeiro toque/clique; por isso há um fallback abaixo.
+window.addEventListener('load', startAudioAutomatically, { once:true });
+['pointerdown','touchstart','keydown','scroll'].forEach(evt => {
+  window.addEventListener(evt, (event) => {
+    if(event.target && event.target.closest && event.target.closest('.audio-control')) return;
+    startAudioAutomatically();
+  }, { once:true, passive:true });
+});
+
+audioToggleBtn.addEventListener('click', () => {
+  if(VeuAudio.playing && VeuAudio.contextState === 'suspended'){
+    VeuAudio.play();
+    syncAudioUI(true);
+    return;
+  }
+  const playing = VeuAudio.toggle();
+  syncAudioUI(playing);
 });
 
 audioVolumeSlider.addEventListener('input', (e) => {
@@ -936,6 +1098,75 @@ audioVolumeSlider.addEventListener('input', (e) => {
 setTimeout(() => {
   if(!VeuAudio.playing){ audioLabel.classList.add('show'); setTimeout(()=> audioLabel.classList.remove('show'), 3500); }
 }, 1800);
+
+/* ---------------- recruitment form -> Discord webhook ---------------- */
+const RECRUIT_WEBHOOK_URL = "https://discord.com/api/webhooks/1523124003097808998/-9Xsc3gTy6LZwU7vzJYHrVTNx2m2IbiQZOc24WMCz_v9fgwxKkP3pek6TssvjCwOHOB-";
+
+const recruitForm = document.getElementById('recruit-form');
+const recruitSubmit = document.getElementById('recruit-submit');
+const recruitStatus = document.getElementById('recruit-status');
+
+function truncate(str, max){
+  str = (str || '').trim();
+  return str.length > max ? str.slice(0, max - 1) + '…' : str;
+}
+
+recruitForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  const nome = document.getElementById('r-nome').value.trim();
+  const telefone = document.getElementById('r-telefone').value.trim();
+  const motivo = document.getElementById('r-motivo').value.trim();
+  const palavra = document.getElementById('r-palavra').value.trim();
+  const justificativa = document.getElementById('r-justificativa').value.trim();
+
+  if(!nome || !telefone || !motivo || !palavra || !justificativa){
+    recruitStatus.textContent = 'Preencha todos os campos antes de enviar.';
+    recruitStatus.className = 'recruit-status err';
+    return;
+  }
+
+  recruitSubmit.disabled = true;
+  recruitStatus.textContent = 'Enviando ao Véu…';
+  recruitStatus.className = 'recruit-status';
+
+  const payload = {
+    embeds: [{
+      title: 'Novo pedido de Recrutamento — Obscury Fraternity',
+      color: 0xB28AFF,
+      fields: [
+        { name: 'Nome', value: truncate(nome, 1024) },
+        { name: 'Telefone', value: truncate(telefone, 1024) },
+        { name: 'Por que deseja fazer parte da fraternidade', value: truncate(motivo, 1024) },
+        { name: 'Palavra', value: truncate(palavra, 256) },
+        { name: 'Justificativa', value: truncate(justificativa, 1024) },
+      ],
+      timestamp: new Date().toISOString(),
+    }]
+  };
+
+  try{
+    const res = await fetch(RECRUIT_WEBHOOK_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    if(res.ok){
+      recruitStatus.textContent = 'Seu pedido foi enviado. O Véu observa.';
+      recruitStatus.className = 'recruit-status ok';
+      recruitForm.reset();
+    } else {
+      recruitStatus.textContent = 'Algo interrompeu o ritual. Tente novamente em instantes.';
+      recruitStatus.className = 'recruit-status err';
+    }
+  } catch(err){
+    recruitStatus.textContent = 'Não foi possível enviar agora. Verifique sua conexão e tente de novo.';
+    recruitStatus.className = 'recruit-status err';
+  } finally {
+    recruitSubmit.disabled = false;
+  }
+});
 </script>
 
 </body>
